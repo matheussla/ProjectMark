@@ -1,0 +1,57 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+enum UserRole {
+  ADMIN
+  EDITOR
+  VIEWER
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  role      UserRole @default(VIEWER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Topic {
+  id            String   @id @default(uuid())
+  name          String
+  content       String
+  version       Int      @default(1)
+  parentTopic   Topic?   @relation("TopicHierarchy", fields: [parentTopicId], references: [id])
+  parentTopicId String?
+  subTopics     Topic[]  @relation("TopicHierarchy")
+  resources     Resource[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+enum ResourceType {
+  VIDEO
+  ARTICLE
+  PDF
+  OTHER
+}
+
+model Resource {
+  id          String       @id @default(uuid())
+  topic       Topic        @relation(fields: [topicId], references: [id])
+  topicId     String
+  url         String
+  description String
+  type        ResourceType
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
