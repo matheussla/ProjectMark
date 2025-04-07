@@ -15,9 +15,7 @@ app.get('/health', (_, res) => {
 
 app.use('/', routes);
 
-app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  errorHandler(err, req, res, next);
-});
+app.use(errorHandler);
 
 const PORT = config.port || 3000;
 app.listen(PORT, () => {

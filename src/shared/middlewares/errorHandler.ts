@@ -17,17 +17,19 @@ export const errorHandler = (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+): void => {
   if (err instanceof AppError) {
-    return res.status(err.statusCode).json({
+    logger.warn(`Operational error: ${err.message}`);
+    res.status(err.statusCode).json({
       status: 'error',
       message: err.message,
     });
+    return;
   }
 
   logger.error('Unhandled error:', err);
 
-  return res.status(500).json({
+  res.status(500).json({
     status: 'error',
     message: 'Internal server error',
   });
