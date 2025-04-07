@@ -2,7 +2,7 @@ import express from 'express';
 
 import { config } from '@config';
 import { logger } from '@logger';
-import { errorHandler } from '@middlewares';
+import { errorHandler } from '@shared/errors';
 
 import routes from './routes';
 

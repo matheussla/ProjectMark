@@ -25,8 +25,14 @@
       "@topics/repositories": ["src/topics/repositories/index.ts"],
       "@topics/services": ["src/topics/services/index.ts"],
       "@topics/dtos": ["src/topics/dtos/index.ts"],
+      "@auth": ["src/auth/index.ts"],
+      "@auth/*": ["src/auth/*"],
+      "@auth/repositories": ["src/auth/repositories/index.ts"],
+      "@auth/services": ["src/auth/services/index.ts"],
+      "@auth/dtos": ["src/auth/dtos/index.ts"],
       "@shared/*": ["src/shared/*"],
       "@middlewares": ["src/shared/middlewares/index.ts"],
+      "@errors": ["src/shared/errors/index.ts"],
       "@logger": ["src/shared/logger/index.ts"],
       "@config": ["src/config/index.ts"]
     }

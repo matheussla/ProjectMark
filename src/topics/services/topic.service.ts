@@ -1,7 +1,7 @@
 import { Topic } from '@prisma/client';
 
+import { AppError } from '@shared/errors';
 import { logger } from '@shared/logger';
-import { AppError } from '@shared/middlewares/errorHandler';
 import { ICreateTopicDTO, IUpdateTopicDTO, ITopicVersionQuery } from '@topics/dtos';
 import { TopicRepository } from '@topics/repositories';
 
@@ -13,7 +13,12 @@ export class TopicService {
   }
 
   async createTopic(data: ICreateTopicDTO): Promise<Topic> {
-    return this.topicRepository.create(data);
+    try {
+      return this.topicRepository.create(data);
+    } catch (error) {
+      logger.error(`Error creating topic: ${error}`);
+      throw new AppError(500, 'Error creating topic');
+    }
   }
 
   async getTopicById(id: string): Promise<Topic | null> {
@@ -60,27 +65,42 @@ export class TopicService {
   }
 
   async updateTopic(id: string, data: IUpdateTopicDTO): Promise<Topic | null> {
-    const topic = await this.topicRepository.createNewVersion(id, data);
+    try {
+      const topic = await this.topicRepository.createNewVersion(id, data);
 
-    if (!topic) {
-      logger.warn(`Not able to create new version for topic with ID ${id}`);
-      throw new AppError(404, 'Not able to create new version for this topic');
+      if (!topic) {
+        logger.warn(`Not able to create new version for topic with ID ${id}`);
+        throw new AppError(404, 'Not able to create new version for this topic');
+      }
+
+      return topic;
+    } catch (error) {
+      logger.error(`Error updating topic with ID ${id}: ${error}`);
+      throw new AppError(500, 'Error updating topic');
     }
-
-    return topic;
   }
 
   async deleteTopic(id: string): Promise<void> {
-    return this.topicRepository.delete(id);
+    try {
+      await this.topicRepository.delete(id);
+    } catch (error) {
+      logger.error(`Error deleting topic with ID ${id}: ${error}`);
+      throw new AppError(500, 'Error deleting topic');
+    }
   }
 
   async getTopicHierarchy(id: string): Promise<Topic & { subTopics: Topic[] }> {
-    const topic = await this.topicRepository.getTopicHierarchyRecursive(id);
+    try {
+      const topic = await this.topicRepository.getTopicHierarchyRecursive(id);
 
-    if (!topic) {
-      throw new AppError(404, 'Topic hierarchy not found');
+      if (!topic) {
+        throw new AppError(404, 'Topic hierarchy not found');
+      }
+
+      return topic;
+    } catch (error) {
+      logger.error(`Error getting topic hierarchy for ID ${id}: ${error}`);
+      throw new AppError(500, 'Error getting topic hierarchy');
     }
-
-    return topic;
   }
 }

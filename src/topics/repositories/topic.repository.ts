@@ -1,8 +1,8 @@
 import { Topic } from '@prisma/client';
 
 import { prisma } from '@shared/database/prisma';
+import { AppError } from '@shared/errors';
 import { logger } from '@shared/logger';
-import { AppError } from '@shared/middlewares/errorHandler';
 import { ICreateTopicDTO, IUpdateTopicDTO, ITopicVersionQuery } from '@topics/dtos';
 
 export class TopicRepository {

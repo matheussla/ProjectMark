@@ -3,6 +3,7 @@ CREATE TABLE "User" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
     "role" TEXT NOT NULL DEFAULT 'VIEWER',
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL
@@ -14,6 +15,7 @@ CREATE TABLE "Topic" (
     "name" TEXT NOT NULL,
     "content" TEXT NOT NULL,
     "version" INTEGER NOT NULL DEFAULT 1,
+    "isLatestVersion" BOOLEAN NOT NULL DEFAULT true,
     "parentTopicId" TEXT,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL,
