@@ -18,6 +18,12 @@ A robust topic management system with versioning, hierarchical structure, and au
 - Yarn or npm
 - Docker and Docker Compose (optional)
 
+## Tests
+
+I haven't had time to implement the tests. However, with more time, I would set up [Jest](https://jestjs.io/) for both unit and integration testing. For integration tests, I would mock the necessary data to simulate real-world scenarios and ensure the system behaves correctly. I'd also configure test coverage to validate that all important code paths are thoroughly tested.
+
+In addition, I would use [Husky](https://typicode.github.io/husky) to enforce pre-push hooks that automatically run the test suite before code is pushed to the repository, helping maintain code quality and preventing regressions.
+
 ## Project Structure
 
 ```
