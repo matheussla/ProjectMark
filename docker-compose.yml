@@ -5,13 +5,13 @@ services:
     build: .
     ports:
       - "3000:3000"
-    environment:
-      - NODE_ENV=development
     volumes:
-      - .:/app
-      - /app/node_modules
-      - /app/prisma/dev.db:/app/prisma/dev.db
-    command: yarn dev
+      - ./data:/app/data
+    environment:
+      - DATABASE_URL=file:/app/data/dev.db
+      - NODE_ENV=production
+      - JWT_SECRET=e308656f-7d6f-46ad-9c32-0c66475c5803
+    restart: unless-stopped
 
 volumes:
   data: 
