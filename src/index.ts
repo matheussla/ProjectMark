@@ -1,6 +1,7 @@
 import express from 'express';
+import swaggerUi from 'swagger-ui-express';
 
-import { config } from '@config';
+import { config, swaggerOptions } from '@config';
 import { logger } from '@logger';
 import { errorHandler } from '@shared/errors';
 
@@ -10,6 +11,8 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerOptions.definition));
 
 app.get('/health', (_, res) => {
   res.status(200).json({ status: 'ok' });
