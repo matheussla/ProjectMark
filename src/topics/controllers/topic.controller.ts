@@ -60,4 +60,10 @@ export class TopicController {
     const versions = await this.topicService.getTopicVersions(id);
     res.status(200).json(versions);
   }
+
+  async findShortestPath(req: Request, res: Response): Promise<void> {
+    const { startId, endId } = req.params;
+    const path = await this.topicService.findShortestPath(startId, endId);
+    res.status(200).json({ path });
+  }
 }

@@ -1,93 +1,163 @@
-import { PrismaClient, Topic } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 
-import { logger } from '@logger';
+import { logger } from '@shared/logger';
 
 const topics = [
   {
-    name: 'JavaScript Fundamentals',
-    content: 'Core concepts of JavaScript programming language',
+    name: 'Programming Fundamentals',
+    content: 'Introduction to programming concepts',
     subtopics: [
       {
-        name: 'Variables and Data Types',
-        content: 'Understanding variables, let, const, and JavaScript data types',
+        name: 'Data Structures',
+        content: 'Basic data structures and algorithms',
+        subtopics: [
+          {
+            name: 'Arrays',
+            content: 'Understanding arrays and their operations',
+          },
+          {
+            name: 'Linked Lists',
+            content: 'Understanding linked lists and their operations',
+          },
+        ],
       },
       {
-        name: 'Functions',
-        content: 'Function declarations, expressions, and arrow functions',
+        name: 'Algorithms',
+        content: 'Common algorithms and their implementations',
+        subtopics: [
+          {
+            name: 'Sorting',
+            content: 'Different sorting algorithms',
+          },
+          {
+            name: 'Searching',
+            content: 'Different searching algorithms',
+          },
+        ],
       },
     ],
   },
   {
-    name: 'React Basics',
-    content: 'Introduction to React development',
+    name: 'Web Development',
+    content: 'Introduction to web development',
     subtopics: [
       {
-        name: 'Components',
-        content: 'Understanding React components and their lifecycle',
+        name: 'Frontend',
+        content: 'Frontend development technologies',
+        subtopics: [
+          {
+            name: 'React',
+            content: 'React framework fundamentals',
+          },
+          {
+            name: 'Vue',
+            content: 'Vue framework fundamentals',
+          },
+        ],
       },
       {
-        name: 'State Management',
-        content: 'Managing state in React applications',
-      },
-    ],
-  },
-  {
-    name: 'Node.js',
-    content: 'Server-side JavaScript with Node.js',
-    subtopics: [
-      {
-        name: 'Express.js',
-        content: 'Web application framework for Node.js',
-      },
-      {
-        name: 'APIs',
-        content: 'Building RESTful APIs with Node.js',
+        name: 'Backend',
+        content: 'Backend development technologies',
+        subtopics: [
+          {
+            name: 'Node.js',
+            content: 'Node.js server-side JavaScript',
+          },
+          {
+            name: 'Express',
+            content: 'Express.js web framework',
+          },
+        ],
       },
     ],
   },
 ];
 
-export async function seedTopics(prisma: PrismaClient): Promise<Topic[]> {
+export async function seedTopics(prisma: PrismaClient): Promise<void> {
   logger.info('Seeding topics...');
 
-  const createdTopics: Topic[] = [];
+  await prisma.topic.deleteMany();
 
-  for (const topicData of topics) {
-    const topicV1 = await prisma.topic.create({
+  const rootTopic = await prisma.topic.create({
+    data: {
+      name: 'Root',
+      content: 'Root of all topics',
+      version: 1,
+      isLatestVersion: true,
+    },
+  });
+
+  for (const mainTopic of topics) {
+    const mainTopicRecord = await prisma.topic.create({
       data: {
-        name: topicData.name,
-        content: topicData.content,
+        name: mainTopic.name,
+        content: mainTopic.content,
         version: 1,
-        isLatestVersion: false,
-      },
-    });
-
-    createdTopics.push(topicV1);
-
-    const topicV2 = await prisma.topic.create({
-      data: {
-        name: topicData.name,
-        content: `${topicData.content} - Version 2`,
-        version: 2,
         isLatestVersion: true,
+        parentTopicId: rootTopic.id,
       },
     });
 
-    createdTopics.push(topicV2);
-
-    for (const subtopic of topicData.subtopics) {
+    for (let i = 2; i <= 3; i++) {
       await prisma.topic.create({
+        data: {
+          name: `${mainTopic.name} v${i}`,
+          content: `${mainTopic.content} - Version ${i}`,
+          version: i,
+          isLatestVersion: i === 3,
+          parentTopicId: rootTopic.id,
+        },
+      });
+    }
+
+    for (const subtopic of mainTopic.subtopics ?? []) {
+      const subtopicRecord = await prisma.topic.create({
         data: {
           name: subtopic.name,
           content: subtopic.content,
           version: 1,
           isLatestVersion: true,
-          parentTopicId: topicV2.id,
+          parentTopicId: mainTopicRecord.id,
         },
       });
+
+      for (let i = 2; i <= 3; i++) {
+        await prisma.topic.create({
+          data: {
+            name: `${subtopic.name} v${i}`,
+            content: `${subtopic.content} - Version ${i}`,
+            version: i,
+            isLatestVersion: i === 3,
+            parentTopicId: mainTopicRecord.id,
+          },
+        });
+      }
+
+      for (const subSubTopic of subtopic.subtopics ?? []) {
+        const subSubTopicRecord = await prisma.topic.create({
+          data: {
+            name: subSubTopic.name,
+            content: subSubTopic.content,
+            version: 1,
+            isLatestVersion: true,
+            parentTopicId: subtopicRecord.id,
+          },
+        });
+
+        for (let i = 2; i <= 3; i++) {
+          await prisma.topic.create({
+            data: {
+              name: `${subSubTopic.name} v${i}`,
+              content: `${subSubTopic.content} - Version ${i}`,
+              version: i,
+              isLatestVersion: i === 3,
+              parentTopicId: subtopicRecord.id,
+            },
+          });
+        }
+      }
     }
   }
 
-  logger.info(`Created ${createdTopics.length} main topics with their subtopics`);
-  return createdTopics;
+  logger.info('Topics seeded successfully');
 }

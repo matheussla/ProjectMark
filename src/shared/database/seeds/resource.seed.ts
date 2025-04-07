@@ -30,8 +30,10 @@ const resourcesData = [
   },
 ];
 
-export async function seedResources(prisma: PrismaClient, topics: Topic[]): Promise<void> {
+export async function seedResources(prisma: PrismaClient): Promise<void> {
   logger.info('Seeding resources...');
+
+  const topics = await prisma.topic.findMany();
 
   for (let i = 0; i < topics.length; i++) {
     const topic = topics[i];

@@ -17,8 +17,8 @@ async function main(): Promise<void> {
     await prisma.user.deleteMany();
 
     await seedUsers(prisma);
-    const topics = await seedTopics(prisma);
-    await seedResources(prisma, topics);
+    await seedTopics(prisma);
+    await seedResources(prisma);
 
     logger.info('Database seeding completed successfully');
   } catch (error) {

@@ -46,5 +46,10 @@ topicRouter.get(
   authMiddleware,
   asyncHandler((req, res) => topicController.getTopicVersions(req, res)),
 );
+topicRouter.get(
+  '/shortest-path/:startId/:endId',
+  authMiddleware,
+  asyncHandler((req, res) => topicController.findShortestPath(req, res)),
+);
 
 export default topicRouter;

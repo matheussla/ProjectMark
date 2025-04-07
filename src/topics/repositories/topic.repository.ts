@@ -86,16 +86,15 @@ export class TopicRepository {
 
     return prisma.$transaction(async (tx) => {
       await tx.topic.update({
-        where: { id },
+        where: { id: currentTopic.id },
         data: { isLatestVersion: false },
       });
 
       return tx.topic.create({
         data: {
-          id,
           name: data.name ?? currentTopic.name,
           content: data.content ?? currentTopic.content,
-          parentTopicId: data.parentTopicId ?? currentTopic.parentTopicId,
+          parentTopicId: currentTopic.parentTopicId,
           version: currentTopic.version + 1,
           isLatestVersion: true,
         },
