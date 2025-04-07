@@ -30,6 +30,7 @@ model Topic {
   name          String
   content       String
   version       Int      @default(1)
+  isLatestVersion Boolean @default(true)
   parentTopic   Topic?   @relation("TopicHierarchy", fields: [parentTopicId], references: [id])
   parentTopicId String?
   subTopics     Topic[]  @relation("TopicHierarchy")
