@@ -1,7 +1,9 @@
 import express from 'express';
+
 import { config } from '@config';
-import { errorHandler } from '@middlewares';
 import { logger } from '@logger';
+import { errorHandler } from '@middlewares';
+
 import routes from './routes';
 
 const app = express();
@@ -20,4 +22,4 @@ app.use(errorHandler);
 const PORT = config.port || 3000;
 app.listen(PORT, () => {
   logger.info(`Server is running on port ${PORT}`);
-}); 
+});

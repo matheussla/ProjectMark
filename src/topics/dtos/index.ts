@@ -1,1 +1,1 @@
-export * from './topic.dto'
+export * from './topic.dto';

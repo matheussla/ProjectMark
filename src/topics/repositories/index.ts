@@ -1,1 +1,1 @@
-export * from './topic.repository'; 
+export * from './topic.repository';

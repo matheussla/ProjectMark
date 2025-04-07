@@ -1,11 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
+
 import { logger } from '../logger';
 
 export class AppError extends Error {
   constructor(
     public statusCode: number,
     public message: string,
-    public isOperational = true
+    public isOperational = true,
   ) {
     super(message);
     Object.setPrototypeOf(this, AppError.prototype);
@@ -16,7 +17,7 @@ export const errorHandler = (
   err: Error | AppError,
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void => {
   if (err instanceof AppError) {
     logger.warn(`Operational error: ${err.message}`);
@@ -33,4 +34,4 @@ export const errorHandler = (
     status: 'error',
     message: 'Internal server error',
   });
-}; 
+};

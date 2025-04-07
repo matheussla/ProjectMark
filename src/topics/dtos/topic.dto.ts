@@ -9,3 +9,8 @@ export interface IUpdateTopicDTO {
   content?: string;
   parentTopicId?: string;
 }
+
+export interface ITopicVersionQuery {
+  topicId: string;
+  version?: number;
+}
