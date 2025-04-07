@@ -1,5 +1,7 @@
 import { SwaggerOptions } from 'swagger-ui-express';
 
+import { config } from '@config';
+
 export const swaggerOptions: SwaggerOptions = {
   definition: {
     openapi: '3.0.0',
@@ -11,8 +13,8 @@ export const swaggerOptions: SwaggerOptions = {
     },
     servers: [
       {
-        url: 'http://localhost:3000',
-        description: 'Development server',
+        url: config.URL,
+        description: `${config.nodeEnv} server`,
       },
     ],
     components: {
