@@ -1,18 +1,18 @@
 import { Request, Response } from 'express';
-import { TopicService } from '../services/topic.service';
-import { CreateTopicDTO, UpdateTopicDTO } from '../dtos'
-import { logger } from '../logger';
+import { TopicService } from '@topics/services';
+import { ICreateTopicDTO, IUpdateTopicDTO } from '@topics/dtos'
+import { logger } from '@logger';
 
 export class TopicController {
   private topicService: TopicService;
 
   constructor() {
-    this.topicService = new TopicService();
+    this.topicService = new TopicService(); 
   }
 
   async createTopic(req: Request, res: Response): Promise<void> {
     try {
-      const data: CreateTopicDTO = req.body;
+      const data: ICreateTopicDTO = req.body;
       const topic = await this.topicService.createTopic(data);
       res.status(201).json(topic);
     } catch (error) {
@@ -25,7 +25,7 @@ export class TopicController {
     try {
       const { id } = req.params;
       const topic = await this.topicService.getTopicById(id);      
-      res.json(topic);
+      res.status(200).json(topic);
     } catch (error) {
       logger.error('Error getting topic:', error);
       res.status(500).json({ error: 'Failed to get topic' });
@@ -35,7 +35,7 @@ export class TopicController {
   async getAllTopics(req: Request, res: Response): Promise<void> {
     try {
       const topics = await this.topicService.getAllTopics();
-      res.json(topics);
+      res.status(200).json(topics);
     } catch (error) {
       logger.error('Error getting all topics:', error);
       res.status(500).json({ error: 'Failed to get topics' });
@@ -45,9 +45,9 @@ export class TopicController {
   async updateTopic(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
-      const data: UpdateTopicDTO = req.body;
+      const data: IUpdateTopicDTO = req.body;
       const topic = await this.topicService.updateTopic(id, data);
-      res.json(topic);
+      res.status(200).json(topic);
     } catch (error) {
       logger.error('Error updating topic:', error);
       res.status(500).json({ error: 'Failed to update topic' });
@@ -58,7 +58,7 @@ export class TopicController {
     try {
       const { id } = req.params;
       await this.topicService.deleteTopic(id);
-      res.status(204).send();
+      res.status(204).json({ message: 'Topic deleted successfully' });
     } catch (error) {
       logger.error('Error deleting topic:', error);
       res.status(500).json({ error: 'Failed to delete topic' });
@@ -69,7 +69,7 @@ export class TopicController {
     try {
       const { id } = req.params;
       const topic = await this.topicService.getTopicHierarchy(id);
-      res.json(topic);
+      res.status(200).json(topic);
     } catch (error) {
       logger.error('Error getting topic hierarchy:', error);
       res.status(500).json({ error: 'Failed to get topic hierarchy' });

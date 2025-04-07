@@ -1,6 +1,6 @@
 import { Topic } from '@prisma/client';
-import { TopicRepository } from '../repositories/topic.repository'
-import { CreateTopicDTO, UpdateTopicDTO } from '../dtos'
+import { TopicRepository } from '@topics/repositories'
+import { ICreateTopicDTO, IUpdateTopicDTO } from '@topics/dtos'
 
 export class TopicService {
   private topicRepository: TopicRepository;
@@ -9,7 +9,7 @@ export class TopicService {
     this.topicRepository = new TopicRepository();
   }
 
-  async createTopic(data: CreateTopicDTO): Promise<Topic> {
+  async createTopic(data: ICreateTopicDTO): Promise<Topic> {
     return this.topicRepository.create(data)
   }
 
@@ -21,7 +21,7 @@ export class TopicService {
     return this.topicRepository.getAll()
   }
 
-  async updateTopic(id: string, data: UpdateTopicDTO): Promise<Topic> {
+  async updateTopic(id: string, data: IUpdateTopicDTO): Promise<Topic> {
     return this.topicRepository.update(id, data)
   }
 

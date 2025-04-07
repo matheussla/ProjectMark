@@ -1,10 +1,10 @@
-export interface CreateTopicDTO {
+export interface ICreateTopicDTO {
   name: string;
   content: string;
   parentTopicId?: string;
 }
 
-export interface UpdateTopicDTO {
+export interface IUpdateTopicDTO {
   name?: string;
   content?: string;
   parentTopicId?: string;

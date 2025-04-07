@@ -1,6 +1,6 @@
-import { prisma } from '../database/prisma';
+import { prisma } from '@shared/database/prisma';
 import { Topic } from '@prisma/client';
-import { CreateTopicDTO, UpdateTopicDTO } from '../dtos'
+import { ICreateTopicDTO, IUpdateTopicDTO } from '@topics/dtos'
 
 export class TopicRepository {
   private async findById(id: string): Promise<Topic | null> {
@@ -13,7 +13,7 @@ export class TopicRepository {
       },
     });
   }
-  async create(data: CreateTopicDTO): Promise<Topic> {
+  async create(data: ICreateTopicDTO): Promise<Topic> {
     return prisma.topic.create({
       data: {
         name: data.name,
@@ -43,7 +43,7 @@ export class TopicRepository {
     });
   }
 
-  async update(id: string, data: UpdateTopicDTO): Promise<Topic> {
+  async update(id: string, data: IUpdateTopicDTO): Promise<Topic> {
     const currentTopic = await this.findById(id)
 
     if (!currentTopic) {
@@ -73,13 +73,9 @@ export class TopicRepository {
       throw new Error('Topic not found');
     }
 
-    if (topic.subTopics.length > 0) {
-      throw new Error('Cannot delete topic with sub-topics');
-    }
-
-    return prisma.topic.delete({
+    await prisma.topic.delete({
       where: { id },
-    });
+    }); 
   }
 
   async getTopicHierarchy(id: string): Promise<Topic & { subTopics: Topic[] }> {

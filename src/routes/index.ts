@@ -1,11 +1,7 @@
 import { Router } from 'express';
-import topicRouter from './topic.router';
+import topicRouter from '@topics';
 
 const router = Router();
-
-router.get('/health', (_, res) => {
-  res.status(200).json({ status: 'ok' });
-});
 
 router.use('/topics', topicRouter);
 

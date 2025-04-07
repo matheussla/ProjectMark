@@ -17,7 +17,19 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "sourceMap": true,
-    "declaration": true
+    "declaration": true,
+    "baseUrl": ".",
+    "paths": {
+      "@topics": ["src/topics/index.ts"],
+      "@topics/*": ["src/topics/*"],
+      "@topics/repositories": ["src/topics/repositories/index.ts"],
+      "@topics/services": ["src/topics/services/index.ts"],
+      "@topics/dtos": ["src/topics/dtos/index.ts"],
+      "@shared/*": ["src/shared/*"],
+      "@middlewares": ["src/shared/middlewares/index.ts"],
+      "@logger": ["src/shared/logger/index.ts"],
+      "@config": ["src/config/index.ts"]
+    }
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "**/*.test.ts"]

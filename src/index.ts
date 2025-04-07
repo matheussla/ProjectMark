@@ -1,13 +1,17 @@
 import express from 'express';
-import { config } from './config';
-import { errorHandler } from './middlewares/errorHandler';
-import { logger } from './logger';
+import { config } from '@config';
+import { errorHandler } from '@middlewares';
+import { logger } from '@logger';
 import routes from './routes';
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.get('/health', (_, res) => {
+  res.status(200).json({ status: 'ok' });
+});
 
 app.use('/', routes);
 
