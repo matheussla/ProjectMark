@@ -2,6 +2,10 @@
 
 A robust topic management system with versioning, hierarchical structure, and authentication.
 
+## API Documentation
+
+The complete API documentation is available at: [https://projectmark.fly.dev/api-docs](https://projectmark.fly.dev/api-docs)
+
 ## Features
 
 - Topic versioning system
@@ -17,6 +21,7 @@ A robust topic management system with versioning, hierarchical structure, and au
 - Node.js (v20 or higher)
 - Yarn or npm
 - Docker and Docker Compose (optional)
+- Fly.io CLI (for deployment)
 
 ## Tests
 
@@ -65,6 +70,10 @@ yarn seed
 yarn dev
 ```
 
+The application will be available at `http://localhost:3000`
+
+### OR
+
 ### Docker Setup
 
 1. Build and start the containers:
@@ -74,99 +83,38 @@ docker-compose up --build
 
 The application will be available at `http://localhost:3000`
 
-## API Endpoints
+### OR
 
-### Authentication
+### Client Session
 
-#### Login
-```bash
-POST /auth/login
-Content-Type: application/json
+To access the API directly without local setup:
 
-{
-  "email": "admin@example.com",
-  "password": "admin123"
-}
-```
+1. Visit [https://projectmark.fly.dev/api-docs](https://projectmark.fly.dev/api-docs)
+2. Use one of the default users to do the login:
+   - Admin: admin@example.com / admin123
+   - Editor: editor@example.com / editor123
+   - Viewer: viewer@example.com / viewer123
+3. Click "Authorize" and enter your credentials
+4. Start making API requests using the interactive documentation
 
-Response:
-```json
-{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "user": {
-    "id": "user-id",
-    "name": "Admin User",
-    "email": "admin@example.com",
-    "role": "ADMIN"
-  }
-}
-```
+### Deployment Summary
 
-### Topics
+The application is deployed on [Fly.io](https://fly.io), a modern platform for running full-stack applications and databases. Key deployment features:
 
-#### Create Topic
-```bash
-POST /topics
-Authorization: Bearer <token>
-Content-Type: application/json
+- **Global Edge Network**: Deployed across multiple regions for optimal performance
+- **Automatic HTTPS**: SSL/TLS encryption out of the box
+- **PostgreSQL Database**: Managed database with automatic backups
+- **Zero-Downtime Deployments**: Seamless updates with no service interruption
+- **Built-in Monitoring**: Real-time logs and metrics
 
-{
-  "name": "Topic Name",
-  "content": "Topic Content",
-  "parentTopicId": "optional-parent-id"
-}
-```
+#### Quick Deployment Steps
 
-#### Get Topic
-```bash
-GET /topics/:id
-Authorization: Bearer <token>
-```
+1. Install Fly.io CLI and login
+2. Launch app with `fly launch`
+3. Set environment variables
+4. Deploy with `fly deploy`
 
-#### Update Topic (Creates new version)
-```bash
-PUT /topics/:id
-Authorization: Bearer <token>
-Content-Type: application/json
-
-{
-  "name": "Updated Name",
-  "content": "Updated Content"
-}
-```
-
-#### Get Topic Versions
-```bash
-GET /topics/:id/versions
-Authorization: Bearer <token>
-```
-
-#### Get Topic Hierarchy
-```bash
-GET /topics/:id/hierarchy
-Authorization: Bearer <token>
-```
-
-#### Find Shortest Path
-```bash
-GET /topics/shortest-path/:startId/:endId
-Authorization: Bearer <token>
-```
-
-### Users
-
-#### Create User
-```bash
-POST /users
-Content-Type: application/json
-
-{
-  "name": "User Name",
-  "email": "user@example.com",
-  "password": "user123",
-  "role": "VIEWER"
-}
-```
+For detailed deployment instructions, see the [Deployment to Fly.io](#deployment-to-flyio) section below.
 
 ## Default Users
 
@@ -195,6 +143,7 @@ Create a `.env` file in the root directory:
 DATABASE_URL="file:./prisma/dev.db"
 JWT_SECRET="your-secret-key"
 NODE_ENV="development"
+URL=""
 ```
 
 ## Database Schema
