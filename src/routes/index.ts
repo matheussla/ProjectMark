@@ -1,8 +1,7 @@
 import authRouter from '@auth/routes';
+import topicRouter from '@topics/routes';
 import userRouter from '@users/routes';
 import { Router } from 'express';
-
-import topicRouter from '@topics/routes';
 
 const router = Router();
 
